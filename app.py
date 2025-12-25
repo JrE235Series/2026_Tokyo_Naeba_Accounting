@@ -68,7 +68,7 @@ with header_col2:
                 st.rerun()
 
 # --- 4. Main Tabs ---
-tabs = st.tabs(["➕ 新增", "📜 明細", "💰 結算"])
+tabs = st.tabs(["➕新增", "📜明細", "結算"])
 
 # --- TAB 1: Input Form ---
 with tabs[0]:
@@ -77,7 +77,7 @@ with tabs[0]:
         item = st.text_input("項目名稱", placeholder="例如：一蘭拉麵")
         
         c1, c2 = st.columns(2)
-        amount = c1.number_input("金額", min_value=0.0, step=1.0)
+        amount = c1.number_input("金額", min_value=0, step=1)
         currency = c2.radio("幣別", ["TWD", "JPY"], horizontal=True)
         
         payer = st.selectbox("誰先墊付？", USERS)
@@ -108,8 +108,7 @@ with tabs[0]:
                     # Clear cache so the new item shows up in List/Summary immediately
                     st.cache_data.clear()
                     st.session_state.last_sync = datetime.now().strftime("%H:%M:%S")
-                    st.success(f"✅ 已成功紀錄：{item}")
-                    st.balloons()
+                    st.success(f"已成功紀錄：{item}")
                     st.rerun()
 
 # --- Load Data for other tabs ---
@@ -167,18 +166,18 @@ with tabs[2]:
             )
 
         st.divider()
-        st.subheader("💡 結算建議")
+        st.subheader("結算建議")
         
         # Two-person logic: Difference between balances
         diff = user_stats[USERS[0]]["paid"] - user_stats[USERS[0]]["fair_share"]
         
         if abs(diff) < 1:
-            st.success("🎉 目前帳目完全平衡！")
+            st.success("目前帳目完全平衡！")
         elif diff > 0:
-            st.warning(f"👉 **{USERS[1]}** 應支付給 **{USERS[0]}**： **NT$ {int(abs(diff))}**")
+            st.warning(f"**{USERS[1]}** 應支付給 **{USERS[0]}**： **NT$ {int(abs(diff))}**")
         else:
-            st.warning(f"👉 **{USERS[0]}** 應支付給 **{USERS[1]}**： **NT$ {int(abs(diff))}**")
+            st.warning(f"**{USERS[0]}** 應支付給 **{USERS[1]}**： **NT$ {int(abs(diff))}**")
             
-        st.info(f"📊 旅程總支出： NT$ {int(total_twd)}")
+        st.info(f"旅程總支出： NT$ {int(total_twd)}")
     else:
         st.info("請先新增資料以計算結算結果")
